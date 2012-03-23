@@ -14,12 +14,12 @@ domain = subdomain + '\w{2,}' + dot_marks + '\w{2,}'
 email_regex = username + at_signs + domain
 
 ### Phone Regex ###
-sep = '[- ]'
-country_code = '(\(?\+[0-9]{1,2}\)?:?)?'
+sep = '(-|\s+)'
+country_code = '(\(?\+[0-9]{1,2}\)?:?'+sep+')?'
 area_code = '\(?[0-9]{3}\)?'
 prefix = '[0-9]{3}'
 suffix = '[0-9]{4}'
-phone_number = sep.join( [ country_code, area_code, prefix, suffix ] )
+phone_number = sep.join( [ country_code + area_code, prefix, suffix ] )
 
 """ 
 TODO
