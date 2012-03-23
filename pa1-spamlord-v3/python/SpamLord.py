@@ -3,7 +3,15 @@ import os
 import re
 import pprint
 
-my_first_pat = '(\w+)@(\w+).edu'
+### Email Regex ###
+at_signs_types = ['@', '\s+\(?at\)?\s+']
+at_signs = '(' + '|'.join(at_signs_types) + ')'
+dot_marks_types = ['\.','\s+\(?dot\)?\s+']
+dot_marks = '(' + '|'.join(dot_marks_types) + ')'
+username = '(\w+)'
+subdomain = '(' + '\w+' + dot_marks + ')*'
+domain = subdomain + '\w+' + dot_marks + '\w+'
+email_regex = username + at_signs + domain
 
 """ 
 TODO
@@ -31,10 +39,11 @@ def process_file(name, f):
     # sys.stderr.write('[process_file]\tprocessing file: %s\n' % (path))
     res = []
     for line in f:
-        matches = re.findall(my_first_pat,line)
-        for m in matches:
-            email = '%s@%s.edu' % m
-            res.append((name,'e',email))
+        for match in re.finditer(email_regex, line):
+            email = match.group(0)
+            email = re.sub(at_signs, '@', email)
+            email = re.sub(dot_marks, '.', email)
+            res.append((name, 'e', email))
     return res
 
 """
