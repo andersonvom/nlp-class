@@ -10,7 +10,7 @@ dot_marks_types = ['\.','\s+\(?dot\)?\s+']
 dot_marks = '(' + '|'.join(dot_marks_types) + ')'
 username = '(\w+)'
 subdomain = '(' + '\w+' + dot_marks + ')*'
-domain = subdomain + '\w+' + dot_marks + '\w+'
+domain = subdomain + '\w{2,}' + dot_marks + '\w{2,}'
 email_regex = username + at_signs + domain
 
 ### Phone Regex ###
