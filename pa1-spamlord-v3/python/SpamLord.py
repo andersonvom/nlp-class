@@ -13,6 +13,14 @@ subdomain = '(' + '\w+' + dot_marks + ')*'
 domain = subdomain + '\w+' + dot_marks + '\w+'
 email_regex = username + at_signs + domain
 
+### Phone Regex ###
+sep = '[- ]'
+country_code = '(\(?\+[0-9]{1,2}\)?:?)?'
+area_code = '\(?[0-9]{3}\)?'
+prefix = '[0-9]{3}'
+suffix = '[0-9]{4}'
+phone_number = sep.join( [ country_code, area_code, prefix, suffix ] )
+
 """ 
 TODO
 This function takes in a filename along with the file object (actually
@@ -44,6 +52,13 @@ def process_file(name, f):
             email = re.sub(at_signs, '@', email)
             email = re.sub(dot_marks, '.', email)
             res.append((name, 'e', email))
+        for match in re.finditer(phone_number, line):
+            phone = match.group(0)
+            phone = re.sub(country_code, '', phone)
+            phone = re.sub(sep, '-', phone)
+            phone = re.sub('[()]', '', phone)
+            phone = phone.strip('-')
+            res.append((name, 'p', phone))
     return res
 
 """
