@@ -4,7 +4,7 @@ import re
 import pprint
 
 ### Email Regex ###
-at_signs_types = ['@', '\s+\(?at\)?\s+']
+at_signs_types = ['\s*@\s*', '\s+\(?at\)?\s+']
 at_signs = '(' + '|'.join(at_signs_types) + ')'
 dot_marks_types = ['\.','\s+\(?dot\)?\s+']
 dot_marks = '(' + '|'.join(dot_marks_types) + ')'
