@@ -5,9 +5,9 @@ import pprint
 
 ### Email Regex ###
 words = '([A-Za-z0-9_.+-]){2,}'
-at_signs_types = ['\s*@\s*', '\s+\(?at\)?\s+']
+at_signs_types = ['\s*@\s*', '\s+\(?at\)?\s+', '\s+where\s+', '\s*&#x40;\s*']
 at_signs = '(' + '|'.join(at_signs_types) + ')'
-dot_marks_types = ['\.','\s+\(?dot\)?\s+']
+dot_marks_types = ['\.', '\s+\(?dot\)?\s+', '\s+dom\s+']
 dot_marks = '(' + '|'.join(dot_marks_types) + ')'
 username = words
 subdomain = '(' + words + dot_marks + ')*'
