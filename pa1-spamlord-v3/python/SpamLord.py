@@ -20,6 +20,8 @@ params = {'quotes': '[\"\']', 'username': username, 'domain': subdomain + domain
 
 followed_by_regex = '(%(username)s) \(followed by.*?(%(domain)s)' % {'username': username, 'domain': subdomain + domain}
 
+space_separated_regex = 'email:\s+(%(username)s) at (%(domain)s)' % {'username': '([a-z]+)', 'domain': '([a-z]+\s?)+'}
+
 ### Phone Regex ###
 sep = '(-|\s+)'
 country_code = '(\(?\+[0-9]{1,2}\)?:?'+sep+')?'
@@ -71,6 +73,12 @@ def process_file(name, f):
         for match in re.finditer(followed_by_regex, line, re.IGNORECASE):
           email = '%(username)s@%(domain)s' % {'username': match.group(1), 'domain': match.group(3)}
           res.append((name, 'e', email))
+
+        for match in re.finditer(space_separated_regex, line, re.IGNORECASE):
+            sanitized_domain = re.sub('\s+', '.', match.group(3).strip())
+            sanitized_domain = re.sub('.dot.', '.', sanitized_domain)
+            email = '%(username)s@%(domain)s' % {'username': match.group(1), 'domain': sanitized_domain}
+            res.append((name, 'e', email))
 
         for match in re.finditer(phone_number, line):
             phone = '%(area_code)s-%(prefix)s-%(suffix)s' % { 'area_code': match.group(3), 'prefix': match.group(5), 'suffix': match.group(7) }
