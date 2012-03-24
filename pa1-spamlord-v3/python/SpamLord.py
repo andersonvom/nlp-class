@@ -14,6 +14,11 @@ subdomain = '(' + words + dot_marks + ')*'
 domain = words + dot_marks + words
 email_regex = username + at_signs + subdomain + domain
 
+obf_function = '|'.join(['obfuscate'])
+obf1_regex = '(%(quotes)s(%(username)s)%(quotes)s,\s*%(quotes)s(%(domain)s)%(quotes)s)'
+obf2_regex = '(%(quotes)s(%(domain)s)%(quotes)s,\s*%(quotes)s(%(username)s)%(quotes)s)'
+params = {'quotes': '[\"\']', 'username': username, 'domain': subdomain + domain}
+
 
 ### Phone Regex ###
 sep = '(-|\s+)'
@@ -57,6 +62,12 @@ def process_file(name, f):
             email = re.sub('-', '', email) # overfitting data, since '-' is a valid email character
             email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
             res.append((name, 'e', email))
+
+        function_regex = obf_function + '\(.*' + obf2_regex
+        for match in re.finditer(function_regex % params, line, re.IGNORECASE):
+            email = '%(username)s@%(domain)s' % {'username': match.group(9), 'domain': match.group(2)}
+            res.append((name, 'e', email))
+
         for match in re.finditer(phone_number, line):
             phone = '%(area_code)s-%(prefix)s-%(suffix)s' % { 'area_code': match.group(3), 'prefix': match.group(5), 'suffix': match.group(7) }
             res.append((name, 'p', phone))
