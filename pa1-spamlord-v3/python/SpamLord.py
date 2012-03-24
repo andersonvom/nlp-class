@@ -50,10 +50,10 @@ def process_file(name, f):
     # sys.stderr.write('[process_file]\tprocessing file: %s\n' % (path))
     res = []
     for line in f:
-        for match in re.finditer(email_regex, line):
+        for match in re.finditer(email_regex, line, re.IGNORECASE):
             email = match.group(0)
-            email = re.sub(at_signs, '@', email)
-            email = re.sub(dot_marks, '.', email)
+            email = re.sub('(?i)'+at_signs, '@', email)
+            email = re.sub('(?i)'+dot_marks, '.', email)
             email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
             res.append((name, 'e', email))
         for match in re.finditer(phone_number, line):
