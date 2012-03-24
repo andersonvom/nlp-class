@@ -54,6 +54,7 @@ def process_file(name, f):
             email = match.group(0)
             email = re.sub(at_signs, '@', email)
             email = re.sub(dot_marks, '.', email)
+            email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
             res.append((name, 'e', email))
         for match in re.finditer(phone_number, line):
             phone = '%(area_code)s-%(prefix)s-%(suffix)s' % { 'area_code': match.group(3), 'prefix': match.group(5), 'suffix': match.group(7) }
