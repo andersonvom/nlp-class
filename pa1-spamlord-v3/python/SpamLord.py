@@ -15,8 +15,7 @@ domain = words + dot_marks + words
 email_regex = username + at_signs + subdomain + domain
 
 obf_function = '|'.join(['obfuscate'])
-obf1_regex = '(%(quotes)s(%(username)s)%(quotes)s,\s*%(quotes)s(%(domain)s)%(quotes)s)'
-obf2_regex = '(%(quotes)s(%(domain)s)%(quotes)s,\s*%(quotes)s(%(username)s)%(quotes)s)'
+obf1_regex = '(%(quotes)s(%(domain)s)%(quotes)s,\s*%(quotes)s(%(username)s)%(quotes)s)'
 params = {'quotes': '[\"\']', 'username': username, 'domain': subdomain + domain}
 
 followed_by_regex = '(%(username)s) \(followed by.*?(%(domain)s)' % {'username': username, 'domain': subdomain + domain}
@@ -64,7 +63,7 @@ def process_file(name, f):
             email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
             res.append((name, 'e', email))
 
-        function_regex = obf_function + '\(.*' + obf2_regex
+        function_regex = obf_function + '\(.*' + obf1_regex
         for match in re.finditer(function_regex % params, line, re.IGNORECASE):
             email = '%(username)s@%(domain)s' % {'username': match.group(9), 'domain': match.group(2)}
             res.append((name, 'e', email))
