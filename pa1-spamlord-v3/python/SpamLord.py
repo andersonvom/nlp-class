@@ -74,8 +74,8 @@ def process_file(name, f):
             res.append((name, 'e', email))
 
         for match in re.finditer(followed_by_regex, line, re.IGNORECASE):
-          email = '%(username)s@%(domain)s' % {'username': match.group(1), 'domain': match.group(3)}
-          res.append((name, 'e', email))
+            email = '%(username)s@%(domain)s' % {'username': match.group(1), 'domain': match.group(3)}
+            res.append((name, 'e', email))
 
         for match in re.finditer(space_separated_regex, line, re.IGNORECASE):
             sanitized_domain = re.sub('\s+', '.', match.group(3).strip())
