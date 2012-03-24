@@ -4,14 +4,16 @@ import re
 import pprint
 
 ### Email Regex ###
+words = '([A-Za-z0-9_.+-]){2,}'
 at_signs_types = ['\s*@\s*', '\s+\(?at\)?\s+']
 at_signs = '(' + '|'.join(at_signs_types) + ')'
 dot_marks_types = ['\.','\s+\(?dot\)?\s+']
 dot_marks = '(' + '|'.join(dot_marks_types) + ')'
-username = '(\w+([-_.]\w+)?)'
-subdomain = '(' + '\w+' + dot_marks + ')*'
-domain = subdomain + '\w{2,}' + dot_marks + '\w{2,}'
-email_regex = username + at_signs + domain
+username = words
+subdomain = '(' + words + dot_marks + ')*'
+domain = words + dot_marks + words
+email_regex = username + at_signs + subdomain + domain
+
 
 ### Phone Regex ###
 sep = '(-|\s+)'
