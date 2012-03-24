@@ -22,6 +22,8 @@ followed_by_regex = '(%(username)s) \(followed by.*?(%(domain)s)' % {'username':
 
 space_separated_regex = 'email:\s+(%(username)s) at (%(domain)s)' % {'username': '([a-z]+)', 'domain': '([a-z]+\s?)+'}
 
+apache_non_email_regex = '<address>Apache/'
+
 ### Phone Regex ###
 sep = '(-|\s+)'
 country_code = '(\(?\+[0-9]{1,2}\)?:?'+sep+')?'
@@ -63,7 +65,8 @@ def process_file(name, f):
             email = re.sub('(?i)'+dot_marks, '.', email)
             email = re.sub('-', '', email) # overfitting data, since '-' is a valid email character
             email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
-            res.append((name, 'e', email))
+            if not re.search(apache_non_email_regex, line, re.IGNORECASE):
+                res.append((name, 'e', email))
 
         function_regex = obf_function + '\(.*' + obf1_regex
         for match in re.finditer(function_regex % params, line, re.IGNORECASE):
