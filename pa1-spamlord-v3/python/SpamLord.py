@@ -54,6 +54,7 @@ def process_file(name, f):
             email = match.group(0)
             email = re.sub('(?i)'+at_signs, '@', email)
             email = re.sub('(?i)'+dot_marks, '.', email)
+            email = re.sub('-', '', email) # overfitting data, since '-' is a valid email character
             email = re.sub('[-_+=,.!@#$%*()]+$', '', email)
             res.append((name, 'e', email))
         for match in re.finditer(phone_number, line):
