@@ -16,10 +16,12 @@ email_regex = username + at_signs + domain
 ### Phone Regex ###
 sep = '(-|\s+)'
 country_code = '(\(?\+[0-9]{1,2}\)?:?'+sep+')?'
-area_code = '\(?[0-9]{3}\)?'
-prefix = '[0-9]{3}'
-suffix = '[0-9]{4}'
+area_code = '\(?([0-9]{3})\)?'
+prefix = '([0-9]{3})'
+suffix = '([0-9]{4})'
+end_regex = '($|\s|[^A-Za-z0-9])'
 phone_number = sep.join( [ country_code + area_code, prefix, suffix ] )
+phone_number = country_code + area_code +sep+'?'+ prefix +sep+ suffix + end_regex
 
 """ 
 TODO
@@ -53,11 +55,7 @@ def process_file(name, f):
             email = re.sub(dot_marks, '.', email)
             res.append((name, 'e', email))
         for match in re.finditer(phone_number, line):
-            phone = match.group(0)
-            phone = re.sub(country_code, '', phone)
-            phone = re.sub(sep, '-', phone)
-            phone = re.sub('[()]', '', phone)
-            phone = phone.strip('-')
+            phone = '%(area_code)s-%(prefix)s-%(suffix)s' % { 'area_code': match.group(3), 'prefix': match.group(5), 'suffix': match.group(7) }
             res.append((name, 'p', phone))
     return res
 
