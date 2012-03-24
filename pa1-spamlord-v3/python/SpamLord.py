@@ -20,7 +20,6 @@ area_code = '\(?([0-9]{3})\)?'
 prefix = '([0-9]{3})'
 suffix = '([0-9]{4})'
 end_regex = '($|\s|[^A-Za-z0-9])'
-phone_number = sep.join( [ country_code + area_code, prefix, suffix ] )
 phone_number = country_code + area_code +sep+'?'+ prefix +sep+ suffix + end_regex
 
 """ 
