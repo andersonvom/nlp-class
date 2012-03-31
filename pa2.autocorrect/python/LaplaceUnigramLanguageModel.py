@@ -1,3 +1,4 @@
+import math
 from collections import *
 
 class LaplaceUnigramLanguageModel:
@@ -25,8 +26,8 @@ class LaplaceUnigramLanguageModel:
         sentence using your language model. Use whatever data you computed in train() here.
     """
     score = 0.0
+    # Laplace Add_1 smoothing
     for token in sentence:
-      # switch the next two lines to change between regular or add_1 smoothing
-      # score += (self.count[token] + 1.0) / ( self.num_words + self.vocabulary_size )
-      score += (self.count[token] * 1.0) / ( self.num_words )
+      score += math.log(self.count[token] + 1.0)
+      score -= math.log( self.num_words + self.vocabulary_size )
     return score
