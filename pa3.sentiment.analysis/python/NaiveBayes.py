@@ -16,6 +16,7 @@ import sys
 import getopt
 import os
 import math
+from collections import Counter
 
 class NaiveBayes:
   class TrainSplit:
@@ -39,6 +40,11 @@ class NaiveBayes:
     self.FILTER_STOP_WORDS = False
     self.stopList = set(self.readFile('../data/english.stop'))
     self.numFolds = 10
+    
+    # Initialize necessary attributes
+    self.class_count = Counter()
+    self.word_count = Counter()
+    self.word_class_count = Counter()
 
   #############################################################################
   # TODO TODO TODO TODO TODO 
@@ -59,7 +65,12 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
-    pass
+    self.class_count[klass] += 1
+
+    for word in words:
+      self.word_count[word] += 1
+      self.word_class_count[(klass, word)] += 1
+    
       
 
   # TODO TODO TODO TODO TODO 
