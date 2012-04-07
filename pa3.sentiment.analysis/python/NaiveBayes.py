@@ -42,6 +42,7 @@ class NaiveBayes:
     self.numFolds = 10
     
     # Initialize necessary attributes
+    self.classes = ('pos', 'neg')
     self.class_count = Counter()
     self.word_count = Counter()
     self.word_class_count = Counter()
@@ -53,7 +54,18 @@ class NaiveBayes:
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
-    return 'pos'
+    c_star = Counter()
+    
+    for klass in self.classes:
+      c_star[klass] += math.log( self.class_count[klass] )
+      c_star[klass] -= math.log( sum(self.class_count.values()) )
+        
+      for word in words:
+        c_star[klass] += math.log( self.word_class_count[(word, klass)] + 1 )
+        c_star[klass] -= math.log( self.word_count[word] + len(self.word_count) )
+    
+    highest_probability = c_star.most_common(1).pop()
+    return highest_probability[0]
   
 
   def addExample(self, klass, words):
@@ -69,7 +81,7 @@ class NaiveBayes:
 
     for word in words:
       self.word_count[word] += 1
-      self.word_class_count[(klass, word)] += 1
+      self.word_class_count[(word, klass)] += 1
     
       
 
