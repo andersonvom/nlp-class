@@ -17,6 +17,7 @@ import getopt
 import os
 import math
 from collections import Counter
+from collections import defaultdict
 
 class NaiveBayes:
   class TrainSplit:
@@ -42,10 +43,10 @@ class NaiveBayes:
     self.numFolds = 10
     
     # Initialize necessary attributes
-    self.classes = ('pos', 'neg')
+    self.num_documents = 0
     self.class_count = Counter()
-    self.word_count = Counter()
-    self.word_class_count = Counter()
+    self.vocabulary = defaultdict(Counter)
+    self.num_tokens = Counter()
 
   #############################################################################
   # TODO TODO TODO TODO TODO 
@@ -54,18 +55,20 @@ class NaiveBayes:
     """ TODO
       'words' is a list of words to classify. Return 'pos' or 'neg' classification.
     """
-    c_star = Counter()
+    score = Counter()
     
-    for klass in self.classes:
-      c_star[klass] += math.log( self.class_count[klass] )
-      c_star[klass] -= math.log( sum(self.class_count.values()) )
-        
+    for klass in self.class_count.keys():
+      # Prior
+      score[klass] += math.log( self.class_count[klass] )
+      score[klass] -= math.log( self.num_documents )
+      
+      # Likelihood
       for word in words:
-        c_star[klass] += math.log( self.word_class_count[(word, klass)] + 1 )
-        c_star[klass] -= math.log( self.word_count[word] + len(self.word_count) )
-    
-    highest_probability = c_star.most_common(1).pop()
-    return highest_probability[0]
+        score[klass] += math.log( self.vocabulary[klass][word] + 1 )
+        score[klass] -= math.log( self.num_tokens[klass] + len(self.vocabulary[klass]) )
+        
+    max_score = score.most_common(1).pop()
+    return max_score[0]
   
 
   def addExample(self, klass, words):
@@ -77,12 +80,12 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
+    self.num_documents += 1.0
     self.class_count[klass] += 1
-
-    for word in words:
-      self.word_count[word] += 1
-      self.word_class_count[(word, klass)] += 1
     
+    for word in words:
+      self.num_tokens[klass] += 1
+      self.vocabulary[klass][word] += 1
       
 
   # TODO TODO TODO TODO TODO 
