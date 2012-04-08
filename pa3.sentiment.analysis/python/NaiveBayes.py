@@ -43,8 +43,7 @@ class NaiveBayes:
     self.numFolds = 10
     
     # Initialize necessary attributes
-    self.num_documents = 0
-    self.class_count = Counter()
+    self.num_documents = Counter()
     self.vocabulary = defaultdict(Counter)
     self.num_tokens = Counter()
 
@@ -57,10 +56,10 @@ class NaiveBayes:
     """
     score = Counter()
     
-    for klass in self.class_count.keys():
+    for klass in self.num_documents.keys():
       # Prior
-      score[klass] += math.log( self.class_count[klass] )
-      score[klass] -= math.log( self.num_documents )
+      score[klass] += math.log( self.num_documents[klass] )
+      score[klass] -= math.log( sum(self.num_documents.values()) )
       
       # Likelihood
       for word in words:
@@ -80,8 +79,7 @@ class NaiveBayes:
      * in the NaiveBayes class.
      * Returns nothing
     """
-    self.num_documents += 1.0
-    self.class_count[klass] += 1
+    self.num_documents[klass] += 1
     
     for word in words:
       self.num_tokens[klass] += 1
