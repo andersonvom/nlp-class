@@ -43,6 +43,7 @@ class NaiveBayes:
     self.numFolds = 10
     
     # Initialize necessary attributes
+    self.alpha = 2
     self.num_documents = Counter()
     self.vocabulary = defaultdict(Counter)
     self.num_tokens = Counter()
@@ -63,8 +64,8 @@ class NaiveBayes:
       
       # Likelihood
       for word in words:
-        score[klass] += math.log( self.vocabulary[klass][word] + 1 )
-        score[klass] -= math.log( self.num_tokens[klass] + len(self.vocabulary[klass]) )
+        score[klass] += math.log( self.vocabulary[klass][word] + self.alpha )
+        score[klass] -= math.log( self.num_tokens[klass] + self.alpha*len(self.vocabulary[klass]) )
         
     max_score = score.most_common(1).pop()
     return max_score[0]
